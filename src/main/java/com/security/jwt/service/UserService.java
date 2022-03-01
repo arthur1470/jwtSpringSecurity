@@ -1,5 +1,13 @@
 package com.security.jwt.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.security.jwt.model.RoleModel;
@@ -11,7 +19,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService{
 
 	private UserRepository userRepository;
 	private RoleRepository roleRepository;
@@ -27,5 +35,17 @@ public class UserService {
 		user.getRoles().add(role);
 		
 		this.userRepository.save(user);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		UserModel user = this.userRepository.findByEmail(email).orElseThrow();
+		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		
+		for (RoleModel role : user.getRoles()) {
+			authorities.add(new SimpleGrantedAuthority(role.getName()));
+		}
+				
+		return new User(user.getEmail(), user.getPassword(), authorities);
 	}
 }
