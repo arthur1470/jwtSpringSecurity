@@ -20,19 +20,19 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "user")
+@Table(name = "usuario")
 public class UserModel {
 
 	@Id
 	private String id;
-	
+
 	private String name;
-	
+
 	@Column(unique = true)
 	private String email;
-	
+
 	private String password;
-	
+
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 

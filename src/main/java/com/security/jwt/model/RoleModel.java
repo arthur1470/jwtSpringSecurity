@@ -24,12 +24,12 @@ public class RoleModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String name;
-	
+
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
-
+	
 	public RoleModel(String name) {
 		this.name = name;
 	}
