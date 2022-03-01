@@ -37,7 +37,7 @@ public class UserModel {
 	private LocalDateTime createdAt;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	private List<UserModel> roles;
+	private List<RoleModel> roles;
 
 	public UserModel(String name, String email, String password) {
 		this.name = name;
