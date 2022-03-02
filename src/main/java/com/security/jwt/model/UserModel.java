@@ -54,4 +54,10 @@ public class UserModel {
 		this.id = UUID.randomUUID().toString();
 		this.createdAt = LocalDateTime.now();
 	}
+
+	@Override
+	public String toString() {
+		return "UserModel [id=" + id + ", name=" + name + ", email=" + email + ", cpf=" + cpf + ", password=" + password
+				+ ", createdAt=" + createdAt + ", roles=" + roles + "]";
+	}
 }

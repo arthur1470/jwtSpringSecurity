@@ -23,6 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final UserDetailsService userDetailsService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final AuthorizationFilter authorizationFilter;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -43,6 +44,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		authenticationFilter.setFilterProcessesUrl("/auth0/token");
 		
 		http.addFilter(authenticationFilter);
-		http.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 }

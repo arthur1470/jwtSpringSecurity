@@ -12,6 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,11 +31,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.jwt.model.UserModel;
 import com.security.jwt.service.BuscarUserService;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
+@Configuration
 public class AuthorizationFilter extends OncePerRequestFilter {
 
+	@Autowired
 	private BuscarUserService service;
 	
 	@Override

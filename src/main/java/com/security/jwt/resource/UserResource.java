@@ -14,10 +14,10 @@ import com.security.jwt.model.UserModel;
 import com.security.jwt.repository.UserRepository;
 import com.security.jwt.service.RegisterUserService;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/users")
 public class UserResource {
 
@@ -27,7 +27,7 @@ public class UserResource {
 	@GetMapping
 	public List<UserModel> findAll(HttpServletRequest request) {
 		UserModel user = (UserModel) request.getAttribute("user");
-		System.out.println("Request: " + user.getId());
+		System.out.println("Request: " + user);
 
 		return this.userRepository.findAll();
 	}

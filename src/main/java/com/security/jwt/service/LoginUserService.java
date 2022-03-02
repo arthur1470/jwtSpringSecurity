@@ -24,13 +24,13 @@ public class LoginUserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserModel user = findUserByUserName(username);
+		UserModel user = findUserByUsername(username);
 		List<SimpleGrantedAuthority> authorities = getUserAuthorities(user);
 
 		return new User(user.getEmail(), user.getPassword(), authorities);
 	}
 
-	private UserModel findUserByUserName(String username) {
+	private UserModel findUserByUsername(String username) {
 		if (username.contains("@")) {
 			return this.userRepository.findByEmail(username).orElseThrow();
 		} else {
