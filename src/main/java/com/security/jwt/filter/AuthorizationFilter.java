@@ -26,9 +26,16 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.security.jwt.model.UserModel;
+import com.security.jwt.service.BuscarUserService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class AuthorizationFilter extends OncePerRequestFilter {
 
+	private BuscarUserService service;
+	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		if(request.getServletPath().equals("/auth0/token")) {
@@ -53,6 +60,10 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 					});
 					
 					SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(email, null, authorities));
+					
+					UserModel user = service.findUserByEmail(email);
+					request.setAttribute("user", user);
+					
 					filterChain.doFilter(request, response);
  				} catch (Exception ex) {
  					HttpStatus httpStatus = HttpStatus.FORBIDDEN;
@@ -68,9 +79,9 @@ public class AuthorizationFilter extends OncePerRequestFilter {
  					
  					new ObjectMapper().writeValue(response.getOutputStream(), errorInfo);
 				}
-				
+			} else {
+				filterChain.doFilter(request, response);
 			}
 		}
 	}
-
 }

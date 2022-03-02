@@ -1,4 +1,4 @@
-package com.security.jwt.filter;
+ package com.security.jwt.filter;
 
 import java.io.IOException;
 import java.util.Date;
@@ -44,19 +44,27 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 		User user = (User) authResult.getPrincipal();
 		
+		Algorithm algorithm = Algorithm.HMAC256("secretExpertsClub");
+		
 		String accessToken = JWT.create()
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
-				.withIssuedAt(new Date(System.currentTimeMillis()))
 				.withIssuer(request.getRequestURL().toString())
 				.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-				.sign(Algorithm.HMAC256("secretExpertsClub"));
+				.sign(algorithm);
+		
+		String refreshToken = JWT.create()
+				.withSubject(user.getUsername())
+				.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+				.withIssuer(request.getRequestURL().toString())
+				.sign(algorithm);
 		
 		response.setStatus(HttpStatus.OK.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		
 		Map<String, String> tokens = new HashMap<>();
 		tokens.put("accessToken", accessToken);
+		tokens.put("refreshToken", refreshToken);
 		
 		new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 	}

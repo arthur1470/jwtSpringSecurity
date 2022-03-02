@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.security.jwt.model.RoleModel;
 import com.security.jwt.model.UserModel;
 import com.security.jwt.repository.RoleRepository;
-import com.security.jwt.service.UserService;
+import com.security.jwt.service.RegisterUserService;
 
 @SpringBootApplication
 public class JwtApplication {
@@ -24,15 +24,15 @@ public class JwtApplication {
 	}
 	
 	@Bean
-	CommandLineRunner runner(RoleRepository roleRepository, UserService userService) {
+	CommandLineRunner runner(RoleRepository roleRepository, RegisterUserService userService) {
 		return args -> {
 			roleRepository.save(new RoleModel("ROLE_MASTER"));
 			roleRepository.save(new RoleModel("ROLE_ADMIN"));
 			roleRepository.save(new RoleModel("ROLE_USER"));
 			
-			userService.save(new UserModel("Pedro", "pedro@gmail.com", "123"));
-			userService.save(new UserModel("Joao", "joao@gmail.com", "456"));
-			userService.save(new UserModel("Ana", "ana@gmail.com", "789"));
+			userService.save(new UserModel("Pedro", "pedro@gmail.com", "99999999900", "123"));
+			userService.save(new UserModel("Joao", "joao@gmail.com", "99999999911", "456"));
+			userService.save(new UserModel("Ana", "ana@gmail.com", "99999999922", "789"));
 			
 			userService.addRoleToUser("pedro@gmail.com", "ROLE_MASTER");
 			userService.addRoleToUser("joao@gmail.com", "ROLE_ADMIN");

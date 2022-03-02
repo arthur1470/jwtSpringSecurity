@@ -30,7 +30,10 @@ public class UserModel {
 
 	@Column(unique = true)
 	private String email;
-
+	
+	@Column(unique = true)
+	private String cpf;
+	
 	private String password;
 
 	@Column(name = "created_at")
@@ -39,9 +42,10 @@ public class UserModel {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<RoleModel> roles;
 
-	public UserModel(String name, String email, String password) {
+	public UserModel(String name, String email, String cpf, String password) {
 		this.name = name;
 		this.email = email;
+		this.cpf = cpf;
 		this.password = password;
 	}
 

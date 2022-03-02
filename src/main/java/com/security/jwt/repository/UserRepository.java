@@ -11,4 +11,5 @@ import com.security.jwt.model.UserModel;
 public interface UserRepository extends JpaRepository<UserModel, String>{
 
 	Optional<UserModel> findByEmail(String email);
+	Optional<UserModel> findByCpf(String cpf);
 }
