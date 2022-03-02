@@ -33,17 +33,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private AuthenticationManager authenticationManager;
 	
 	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException {
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		String email = request.getParameter("email");
-		String password = request.getParameter("senha");
+		String password = request.getParameter("password");
 		
 		return this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 	}
 	
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-			Authentication authResult) throws IOException, ServletException {
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 		User user = (User) authResult.getPrincipal();
 		
 		String accessToken = JWT.create()
@@ -64,8 +62,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	}
 	
 	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException failed) throws IOException, ServletException {
-		super.unsuccessfulAuthentication(request, response, failed);
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+		
+		Map<String, Object> errorInfo = new HashMap<>();
+			errorInfo.put("status", httpStatus.value());
+			errorInfo.put("message", failed.getMessage());
+			errorInfo.put("path", request.getServletPath());
+			errorInfo.put("error", httpStatus.getReasonPhrase());
+		
+		response.setStatus(httpStatus.value());
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		
+		new ObjectMapper().writeValue(response.getOutputStream(), errorInfo);
 	}
 }

@@ -10,6 +10,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.security.jwt.filter.AuthenticationFilter;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -31,7 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests().antMatchers("/roles").hasAuthority("ROLE_MASTER");
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ROLE_MASTER", "ROLE_ADMIN", "ROLE_USER");
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/users").hasAnyAuthority("ROLE_MASTER");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/users").hasAnyAuthority("ROLE_MASTER", "ROLE_ADMIN");
 		http.authorizeRequests().anyRequest().authenticated();
+		
+		AuthenticationFilter authenticationFilter = new AuthenticationFilter(super.authenticationManagerBean());
+		authenticationFilter.setFilterProcessesUrl("/auth0/token");
+		
+		http.addFilter(authenticationFilter);
 	}
 }
