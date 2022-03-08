@@ -12,7 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,18 +27,13 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.security.jwt.model.UserModel;
-import com.security.jwt.service.BuscarUserService;
 
 @Configuration
 public class AuthorizationFilter extends OncePerRequestFilter {
 
-	@Autowired
-	private BuscarUserService service;
-	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-		if(request.getServletPath().equals("/auth0/token")) {
+		if(request.getServletPath().equals("/login")) {
 			filterChain.doFilter(request, response);
 		} else {
 			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -47,23 +41,20 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 			if(!ObjectUtils.isEmpty(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
 				try {
 					String token = authorizationHeader.substring("Bearer ".length());
-					Algorithm algorithm = Algorithm.HMAC256("secretExpertsClub");
+					Algorithm algorithm = Algorithm.HMAC256("ChaveMegaUltraSecreta");
 					JWTVerifier verifier = JWT.require(algorithm).build();
 					DecodedJWT decodedJWT = verifier.verify(token);
 					
-					String email = decodedJWT.getSubject();
+					String cpf = decodedJWT.getSubject();
 					String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
 					
 					List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-					
+
 					Arrays.stream(roles).forEach(role -> {
 						authorities.add(new SimpleGrantedAuthority(role));
 					});
 					
-					SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(email, null, authorities));
-					
-					UserModel user = service.findUserByEmail(email);
-					request.setAttribute("user", user);
+					SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(cpf, null, authorities));
 					
 					filterChain.doFilter(request, response);
  				} catch (Exception ex) {

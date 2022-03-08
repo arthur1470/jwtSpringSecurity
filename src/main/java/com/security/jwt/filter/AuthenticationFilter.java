@@ -18,12 +18,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.security.jwt.security.userdetails.User;
 
 import lombok.AllArgsConstructor;
 
@@ -44,13 +44,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 		User user = (User) authResult.getPrincipal();
 		
-		Algorithm algorithm = Algorithm.HMAC256("secretExpertsClub");
+		Algorithm algorithm = Algorithm.HMAC256("ChaveMegaUltraSecreta");
 		
 		String accessToken = JWT.create()
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
 				.withIssuer(request.getRequestURL().toString())
 				.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+				.withClaim("permissions", user.getPermissions().stream().map(permission -> permission.getName()).collect(Collectors.toList()))
 				.sign(algorithm);
 		
 		String refreshToken = JWT.create()

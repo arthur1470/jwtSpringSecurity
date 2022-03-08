@@ -1,4 +1,4 @@
-package com.security.jwt.service;
+package com.security.jwt.service.user;
 
 import org.springframework.stereotype.Service;
 
@@ -9,15 +9,15 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class BuscarUserService {
+public class FindUserService {
 	
 	private UserRepository userRepository;
 	
-	public UserModel findUserByEmail(String email) {
+	public UserModel findByEmail(String email) {
 		return this.userRepository.findByEmail(email).orElseThrow();
 	}
 
-	public UserModel findUserByCpf(String cpf) {
+	public UserModel findByCpf(String cpf) {
 		return this.userRepository.findByEmail(cpf).orElseThrow();
-	}
+	}	
 }

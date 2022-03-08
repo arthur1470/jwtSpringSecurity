@@ -18,25 +18,25 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "role")
-public class RoleModel {
+@Table(name = "permissao")
+public class PermissionModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
 	private String name;
-
+	
 	@Column(name = "created_by")
 	private String createdBy;
 	
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 	
-	public RoleModel(String name) {
+	public PermissionModel(String name) {
 		this.name = name;
 	}
-
+	
 	@PrePersist
 	private void prePersist() {
 		this.createdAt = LocalDateTime.now();

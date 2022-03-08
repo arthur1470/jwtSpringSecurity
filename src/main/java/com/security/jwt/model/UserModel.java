@@ -12,6 +12,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,7 +43,12 @@ public class UserModel {
 	private LocalDateTime createdAt;
 
 	@ManyToMany(fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	private List<RoleModel> roles;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
+	private List<PermissionModel> permissions;
 
 	public UserModel(String name, String email, String cpf, String password) {
 		this.name = name;
@@ -53,11 +61,5 @@ public class UserModel {
 	private void prePersist() {
 		this.id = UUID.randomUUID().toString();
 		this.createdAt = LocalDateTime.now();
-	}
-
-	@Override
-	public String toString() {
-		return "UserModel [id=" + id + ", name=" + name + ", email=" + email + ", cpf=" + cpf + ", password=" + password
-				+ ", createdAt=" + createdAt + ", roles=" + roles + "]";
 	}
 }
