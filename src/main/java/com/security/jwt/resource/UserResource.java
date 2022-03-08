@@ -20,11 +20,11 @@ import lombok.AllArgsConstructor;
 public class UserResource {
 
 	private RegisterUserService registerUser;
-	private UserRepository userRepository;
+	private UserRepository repository;
 
 	@GetMapping
 	public List<UserModel> findAll() {
-		return this.userRepository.findAll();
+		return this.repository.findAll();
 	}
 
 	@PostMapping

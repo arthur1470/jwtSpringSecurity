@@ -9,5 +9,6 @@ import com.security.jwt.model.PermissionModel;
 
 @Repository
 public interface PermissionRepository extends JpaRepository<PermissionModel, Long> {
+	
 	Optional<PermissionModel> findByName(String name);
 }

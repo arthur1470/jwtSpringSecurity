@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.security.jwt.security.userdetails.User;
+import com.security.jwt.security.userdetails.CustomUserDetail;
 
 import lombok.AllArgsConstructor;
 
@@ -42,7 +42,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-		User user = (User) authResult.getPrincipal();
+		CustomUserDetail user = (CustomUserDetail) authResult.getPrincipal();
 		
 		Algorithm algorithm = Algorithm.HMAC256("ChaveMegaUltraSecreta");
 		

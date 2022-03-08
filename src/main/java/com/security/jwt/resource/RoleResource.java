@@ -18,15 +18,15 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/roles")
 public class RoleResource {
 
-	private RoleRepository roleRepository;
+	private RoleRepository repository;
 	
 	@GetMapping
 	public List<RoleModel> findAll() {
-		return this.roleRepository.findAll();
+		return this.repository.findAll();
 	}
 	
 	@PostMapping
 	public RoleModel save(@RequestBody RoleModel roleModel) {
-		return this.roleRepository.save(roleModel);
+		return this.repository.save(roleModel);
 	}
 }

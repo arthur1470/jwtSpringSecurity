@@ -62,4 +62,5 @@ public class UserModel {
 		this.id = UUID.randomUUID().toString();
 		this.createdAt = LocalDateTime.now();
 	}
+	
 }

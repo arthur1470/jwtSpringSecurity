@@ -47,14 +47,19 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 					
 					String cpf = decodedJWT.getSubject();
 					String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+					String[] permissions = decodedJWT.getClaim("permissions").asArray(String.class);
 					
 					List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
+					UserOn.cpf = cpf; 
+					UserOn.permissions = permissions; 
+					UserOn.roles = roles;
+					
 					Arrays.stream(roles).forEach(role -> {
 						authorities.add(new SimpleGrantedAuthority(role));
 					});
 					
-					SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(cpf, null, authorities));
+					SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(cpf, null, authorities));			
 					
 					filterChain.doFilter(request, response);
  				} catch (Exception ex) {
@@ -74,6 +79,27 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 			} else {
 				filterChain.doFilter(request, response);
 			}
+		}
+	}
+	
+	public static final class UserOn {
+
+		private static String cpf;
+		private static String[] roles;
+		private static String[] permissions;
+		
+		private UserOn() {}
+
+		public static String getCpf() {
+			return cpf;
+		}
+
+		public static String[] getRoles() {
+			return roles;
+		}
+
+		public static String[] getPermissions() {
+			return permissions;
 		}
 	}
 }
